@@ -5,15 +5,21 @@ const handlebars = require("handlebars");
 
 async function createPDF(data){
 
-	var templateHtml = fs.readFileSync(path.join(process.cwd(), 'template.html'), 'utf8');
-	var template = handlebars.compile(templateHtml);
+  // Reading the templates HTML
+  var templateHtml = fs.readFileSync(path.join(process.cwd(), 'template.html'), 'utf8');
+  
+  var template = handlebars.compile(templateHtml);
+  
+  // Passing the ctx data
 	var html = template(data);
 
 	var milis = new Date();
 	milis = milis.getTime();
 
+  // Path where pdf will be created
 	var pdfPath = path.join('./', `${data.name}-${milis}.pdf`);
 
+  // puppeteer options for pdf
 	var options = {
 		width: '1230px',
 		headerTemplate: "<p></p>",
@@ -27,10 +33,7 @@ async function createPDF(data){
 		path: pdfPath
 	}
 
-	const browser = await puppeteer.launch({
-		args: ['--no-sandbox'],
-		headless: true
-	});
+	const browser = await puppeteer.launch();
 
 	var page = await browser.newPage();
 	
